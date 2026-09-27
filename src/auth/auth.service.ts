@@ -7,4 +7,14 @@ export class AuthService {
     @Inject('UsersRepository')
     private readonly usersRepository: UsersRepository,
   ) {}
+
+  async register(username: string, email: string, passwordHash: string) {
+    const existingUser = await this.usersRepository.findByEmail(email);
+
+    if (existingUser) {
+      throw new Error('User already exists');
+    }
+
+    return this.usersRepository.create({ username, email, passwordHash });
+  }
 }
